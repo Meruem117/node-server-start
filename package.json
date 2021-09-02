@@ -1,0 +1,11 @@
+{
+  "name": "node-db-manager",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Meruem117/node-server-start.git",
+  "author": "Meruem117 <1572677319@qq.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node ./src/node-base/app.js"
+  }
+}
