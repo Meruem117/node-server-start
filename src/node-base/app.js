@@ -13,7 +13,7 @@ http.createServer(function (request, response) {
         fs.readFile('./src/node-base/static/' + filename, (err, data) => {
             if (err) {
                 console.error(err)
-                response.writeHead(404, { 'Content-Type': 'text/html' })
+                response.writeHead(404, { 'Content-Type': 'text/html;charset=utf-8' })
                 response.end('404 Not Found')
             }
             response.writeHead(200, { 'Content-Type': contentType })
