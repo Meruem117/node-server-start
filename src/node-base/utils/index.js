@@ -28,12 +28,6 @@ function getFileMime(extname) {
     })
 }
 
-// function getFileMime(extname) {
-//     const data = fs.readFileSync('./src/node-base/data/mime.json')
-//     const mimeObj = JSON.parse(data.toString())
-//     return mimeObj[extname]
-// }
-
 module.exports = {
     getContentType,
     getFileMime
