@@ -1,10 +1,9 @@
 const fs = require('fs')
 const path = require('path')
-const url = require('url')
 
-const mimePath = './src/node-base/data/mime.json'
+const basePath = './src/node-base'
 const getFileMime = function (extname) {
-    const data = fs.readFileSync(mimePath)
+    const data = fs.readFileSync(basePath + '/data/mime.json')
     const mimeObj = JSON.parse(data.toString())
     return mimeObj[extname]
 }
