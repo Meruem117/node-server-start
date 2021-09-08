@@ -1,4 +1,5 @@
 const fs = require('fs')
+const { basePath } = require('../constant')
 
 function getContentType(extname) {
     switch (extname) {
@@ -15,7 +16,7 @@ function getContentType(extname) {
 
 function getFileMime(extname) {
     return new Promise((resolve, reject) => {
-        fs.readFile('./src/node-base/data/mime.json', (err, data) => {
+        fs.readFile(basePath + '/data/mime.json', (err, data) => {
             if (err) {
                 console.error(err)
                 reject(err)
