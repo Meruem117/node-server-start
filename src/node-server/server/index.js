@@ -10,14 +10,14 @@ function getFileMime(extname) {
 }
 
 function initStatic(request, response, staticPath) {
-    const pathname = new url.URL(request.url, baseUrl).pathname
-    const extname = path.extname(pathname)
+    const filename = new url.URL(request.url, baseUrl).pathname
+    const extname = path.extname(filename)
     if (extname) {
         try {
-            const data = fs.readFileSync(staticPath + pathname);
+            const data = fs.readFileSync(staticPath + filename);
             if (data) {
                 const mime = getFileMime(extname)
-                response.writeHead(200, { 'Content-Type': '' + mime + ';charset=utf-8' })
+                response.writeHead(200, { 'Content-Type': `${mime};charset=utf-8` })
                 response.end(data)
             }
         } catch (error) {

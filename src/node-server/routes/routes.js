@@ -21,7 +21,7 @@ const app = {
                     const data = fs.readFileSync(staticPath + filename)
                     if (data) {
                         const mime = getFileMime(extname)
-                        response.writeHead(200, { 'Content-Type': '' + mime + ';charset=utf-8' })
+                        response.writeHead(200, { 'Content-Type': `${mime};charset=utf-8` })
                         response.end(data)
                     } else {
                         response.writeHead(404, { 'Content-Type': 'text/html;charset=utf-8' })

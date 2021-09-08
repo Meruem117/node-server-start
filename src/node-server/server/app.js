@@ -19,4 +19,6 @@ app.post('/regist', function (request, response) {
     response.send(request.body)
 })
 
+app.static(basePath + '/static/')
+
 console.log('Server running at http://127.0.0.1:3222/')
