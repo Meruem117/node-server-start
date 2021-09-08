@@ -1,5 +1,37 @@
 const url = require('url')
+const fs = require('fs')
+const path = require('path')
 const { basePath, baseUrl } = require('../constant')
+
+function getFileMime(extname) {
+    const data = fs.readFileSync(basePath + '/data/mime.json')
+    const mimeObj = JSON.parse(data.toString())
+    return mimeObj[extname]
+}
+
+function initStatic(request, response, staticPath) {
+    const pathname = new url.URL(request.url, baseUrl).pathname
+    const extname = path.extname(pathname)
+    if (extname) {
+        try {
+            const data = fs.readFileSync(staticPath + pathname);
+            if (data) {
+                const mime = getFileMime(extname)
+                response.writeHead(200, { 'Content-Type': '' + mime + ';charset=utf-8' })
+                response.end(data)
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    }
+}
+
+function changeResponse(response) {
+    response.send = (data) => {
+        response.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' })
+        response.end(data)
+    }
+}
 
 const server = () => {
     const state = {
@@ -9,8 +41,10 @@ const server = () => {
     }
 
     const app = function (request, response) {
+        changeResponse(response)
+        initStatic(request, response, state.staticPath)
         const pathname = new url.URL(request.url, baseUrl).pathname
-        const method = request.method.toLowercase()
+        const method = request.method.toLowerCase()
         if (state[method][pathname]) {
             if (method === 'get') {
                 state.get[pathname](request, response)
@@ -45,4 +79,4 @@ const server = () => {
     return app
 }
 
-module.exports = server
+module.exports = server()
