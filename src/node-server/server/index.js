@@ -10,7 +10,7 @@ function getFileMime(extname) {
 }
 
 function initStatic(request, response, staticPath) {
-    const filename = new url.URL(request.url, baseUrl).pathname
+    const filename = request.url === '/' ? 'index.html' : request.url
     const extname = path.extname(filename)
     if (extname) {
         try {
