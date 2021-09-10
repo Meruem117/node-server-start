@@ -2,6 +2,12 @@ const express = require('express')
 
 const app = express()
 
+//* static
+app.use('/static', express.static(__dirname + '/static'))
+//* ejs
+app.set('view engine', 'ejs')
+app.set('views', __dirname + '/views')
+
 //* base
 app.get('/', (request, response) => {
     response.send('首页')
@@ -39,8 +45,6 @@ app.delete('/deleteTest', (request, response) => {
 })
 
 //* ejs
-app.set('view engine', 'ejs')
-
 app.get('/home', (request, response) => {
     const message = 'ejs test'
     response.render('home', { message: message })
