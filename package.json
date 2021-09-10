@@ -4,13 +4,5 @@
   "main": "index.js",
   "repository": "https://github.com/Meruem117/node-server-start.git",
   "author": "Meruem117 <1572677319@qq.com>",
-  "license": "MIT",
-  "scripts": {
-    "node": "node ./src/node-server/app.js",
-    "express": "node ./src/express-server/app.js"
-  },
-  "dependencies": {
-    "ejs": "^3.1.6",
-    "express": "^4.17.1"
-  }
+  "license": "MIT"
 }
