@@ -1,53 +1,84 @@
 const express = require('express')
+const cookieParser = require('cookie-parser')
 
 const app = express()
 
 //* static
 app.use('/static', express.static(__dirname + '/static'))
+
 //* ejs
+// app.set('view engine', 'pug')
 app.set('view engine', 'ejs')
 app.set('views', __dirname + '/views')
 
-//* base
-app.get('/', (request, response) => {
-    response.send('首页')
+//* middleware
+app.use(cookieParser())
+const logger = (req, res, next) => {
+    console.log('log')
+    next()
+}
+const requestTime = (req, res, next) => {
+    req.requestTime = Date.now()
+    next()
+}
+app.use(logger, requestTime)
+app.use('/user/:id', (req, res, next) => {
+    console.log('Requested method: ' + req.method)
+    next()
 })
 
-app.get('/getTest', (request, response) => {
-    response.send('getTest')
+app.get('/', (req, res) => {
+    res.cookie('name', 'John')
+    res.send('Home')
+    // res.render('index', { title: 'Home', message: 'Home Page' })
 })
 
-app.get('/getTest/test', (request, response) => {
-    response.send('getTest/test')
+app.get('/article', (req, res) => {
+    const name = req.cookies.name
+    res.send('article viewed by ' + name)
 })
 
-app.get('/getTest/:id', (request, response) => {
-    const id = request.params['id']
-    response.send('id = ' + id)
+app.get('/about', (req, res) => {
+    const message = 'ejs test about'
+    res.render('about', { message: message })
 })
 
-app.get('/product', (request, response) => {
-    const query = request.query
+app.get('/product', (req, res) => {
+    const query = req.query
     console.log(query)
-    response.send('product')
+    res.send('product')
 })
 
-app.post('/postTest', (request, response) => {
-    response.send('postTest')
+app.get('/user/:id', (req, res) => {
+    const id = req.params['id']
+    res.send('id = ' + id)
 })
 
-app.put('/putTest', (request, response) => {
-    response.send('putTest')
+app.get('/time', (req, res) => {
+    const text = `Requested at ${req.requestTime}`
+    res.send(text)
 })
 
-app.delete('/deleteTest', (request, response) => {
-    response.send('deleteTest')
+//* base
+app.get('/getTest', (req, res) => {
+    res.send('getTest')
 })
 
-//* ejs
-app.get('/home', (request, response) => {
-    const message = 'ejs test'
-    response.render('home', { message: message })
+app.post('/postTest', (req, res) => {
+    res.send('postTest')
+})
+
+app.put('/putTest', (req, res) => {
+    res.send('putTest')
+})
+
+app.delete('/deleteTest', (req, res) => {
+    res.send('deleteTest')
+})
+
+// 404
+app.use((req, res, next) => {
+    res.status(404).send('404 Not Found')
 })
 
 app.listen(3333)
