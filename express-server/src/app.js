@@ -1,7 +1,19 @@
 const express = require('express')
 const cookieParser = require('cookie-parser')
+const session = require('express-session')
 
 const app = express()
+
+//* session
+app.use(session({
+    secret: 'express server session',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false, maxAge: 1000 * 60 }
+}))
+
+//* cookie
+app.use(cookieParser())
 
 //* static
 app.use('/static', express.static(__dirname + '/static'))
@@ -12,7 +24,6 @@ app.set('view engine', 'ejs')
 app.set('views', __dirname + '/views')
 
 //* middleware
-app.use(cookieParser())
 const logger = (req, res, next) => {
     console.log('log')
     next()
