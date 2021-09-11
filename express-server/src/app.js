@@ -9,7 +9,11 @@ app.use(session({
     secret: 'express server session',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false, maxAge: 1000 * 60 }
+    cookie: {
+        secure: false,
+        maxAge: 1000 * 60
+    },
+    rolling: true
 }))
 
 //* cookie
@@ -44,9 +48,22 @@ app.get('/', (req, res) => {
     // res.render('index', { title: 'Home', message: 'Home Page' })
 })
 
-app.get('/article', (req, res) => {
+app.get('/cookie', (req, res) => {
     const name = req.cookies.name
-    res.send('article viewed by ' + name)
+    res.send('cookie viewed by ' + name)
+})
+
+app.get('/login', (req, res) => {
+    req.session.name = 'John'
+    res.send('login')
+})
+
+app.get('/session', (req, res) => {
+    if (req.session.name) {
+        res.send(req.session.name + ' has login')
+    } else {
+        res.send('no one has login')
+    }
 })
 
 app.get('/about', (req, res) => {
