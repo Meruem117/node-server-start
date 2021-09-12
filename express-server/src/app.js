@@ -1,6 +1,7 @@
 const express = require('express')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
+const router = require('./routes/router')
 
 const app = express()
 
@@ -42,6 +43,9 @@ app.use('/user/:id', (req, res, next) => {
     next()
 })
 
+//* router
+app.use('/', router)
+
 app.get('/', (req, res) => {
     res.cookie('name', 'John')
     res.send('Home')
@@ -53,7 +57,7 @@ app.get('/cookie', (req, res) => {
     res.send('cookie viewed by ' + name)
 })
 
-app.get('/login', (req, res) => {
+app.get('/set', (req, res) => {
     req.session.name = 'John'
     res.send('login')
 })
