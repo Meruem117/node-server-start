@@ -2,15 +2,14 @@ const express = require('express')
 
 const router = express.Router()
 
-router.get('/form', (req, res) => {
+router.get('/', (req, res) => {
   res.render('form', {})
 })
 
 router.post('/login', (req, res) => {
   const body = req.body
-  console.log(req)
-  // res.send(body.username + ' login')
-  res.send('login')
+  console.log(body)
+  res.send(body.username + ' login')
 })
 
 module.exports = router

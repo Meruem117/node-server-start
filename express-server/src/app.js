@@ -1,24 +1,9 @@
 const express = require('express')
-const cookieParser = require('cookie-parser')
-const session = require('express-session')
 const router = require('./routes/router')
+const cache = require('./routes/cache')
+const base = require('./routes/base')
 
 const app = express()
-
-//* session
-app.use(session({
-    secret: 'express server session',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-        secure: false,
-        maxAge: 1000 * 60
-    },
-    rolling: true
-}))
-
-//* cookie
-app.use(cookieParser())
 
 //* static
 app.use('/static', express.static(__dirname + '/static'))
@@ -42,32 +27,17 @@ app.use('/user/:id', (req, res, next) => {
     console.log('Requested method: ' + req.method)
     next()
 })
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
 
 //* router
-app.use('/', router)
+app.use('/form', router)
+app.use('/cache', cache)
+app.use('/base', base)
 
 app.get('/', (req, res) => {
-    res.cookie('name', 'John')
     res.send('Home')
     // res.render('index', { title: 'Home', message: 'Home Page' })
-})
-
-app.get('/cookie', (req, res) => {
-    const name = req.cookies.name
-    res.send('cookie viewed by ' + name)
-})
-
-app.get('/set', (req, res) => {
-    req.session.name = 'John'
-    res.send('login')
-})
-
-app.get('/session', (req, res) => {
-    if (req.session.name) {
-        res.send(req.session.name + ' has login')
-    } else {
-        res.send('no one has login')
-    }
 })
 
 app.get('/about', (req, res) => {
@@ -89,23 +59,6 @@ app.get('/user/:id', (req, res) => {
 app.get('/time', (req, res) => {
     const text = `Requested at ${req.requestTime}`
     res.send(text)
-})
-
-//* base
-app.get('/getTest', (req, res) => {
-    res.send('getTest')
-})
-
-app.post('/postTest', (req, res) => {
-    res.send('postTest')
-})
-
-app.put('/putTest', (req, res) => {
-    res.send('putTest')
-})
-
-app.delete('/deleteTest', (req, res) => {
-    res.send('deleteTest')
 })
 
 // 404
