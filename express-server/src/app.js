@@ -1,7 +1,8 @@
 const express = require('express')
-const router = require('./routes/router')
+const form = require('./routes/form')
 const cache = require('./routes/cache')
 const base = require('./routes/base')
+const middleware = require('./routes/middleware')
 
 const app = express()
 
@@ -13,27 +14,14 @@ app.use('/static', express.static(__dirname + '/static'))
 app.set('view engine', 'ejs')
 app.set('views', __dirname + '/views')
 
-//* middleware
-const logger = (req, res, next) => {
-    console.log('log')
-    next()
-}
-const requestTime = (req, res, next) => {
-    req.requestTime = Date.now()
-    next()
-}
-app.use(logger, requestTime)
-app.use('/user/:id', (req, res, next) => {
-    console.log('Requested method: ' + req.method)
-    next()
-})
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
 //* router
-app.use('/form', router)
-app.use('/cache', cache)
 app.use('/base', base)
+app.use('/cache', cache)
+app.use('/middleware', middleware)
+app.use('/form', form)
 
 app.get('/', (req, res) => {
     res.send('Home')
