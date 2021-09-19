@@ -1,9 +1,24 @@
 const Koa = require('koa')
 const Router = require('koa-router')
+const views = require('koa-views')
 
 const app = new Koa()
 const router = new Router()
 
+//* views
+const viewsPath = __dirname + '/views'
+app.use(views(viewsPath, {
+  extension: 'ejs'
+}))
+app.use(async (ctx, next) => {
+  ctx.state = {
+    session: this.session,
+    name: 'John'
+  }
+  await next()
+})
+
+//* middleware
 app.use(async (ctx, next) => {
   console.log('p1')
   await next()
@@ -25,6 +40,15 @@ router.get('/get', async (ctx) => {
   console.log(ctx.querystring)
   console.log(ctx.request.url)
   ctx.body = 'get value'
+})
+
+router.get('/about', async (ctx) => {
+  const message = 'ejs test'
+  const d = '<h2>test</h2>'
+  await ctx.render('about', {
+    message,
+    dom: d
+  })
 })
 
 app
