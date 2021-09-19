@@ -1,17 +1,21 @@
 const Koa = require('koa')
 const Router = require('koa-router')
-const views = require('koa-views')
+// const views = require('koa-views')
 const bodyParser = require('koa-bodyparser')
 const static = require('koa-static')
+const render = require('koa-art-template')
 
 const app = new Koa()
 const router = new Router()
 
+app.use(bodyParser())
+
 //* views
 const viewsPath = __dirname + '/views'
-app.use(views(viewsPath, {
-  extension: 'ejs'
-}))
+//* ejs
+// app.use(views(viewsPath, {
+//   extension: 'ejs'
+// }))
 app.use(async (ctx, next) => {
   ctx.state = {
     session: this.session,
@@ -19,8 +23,12 @@ app.use(async (ctx, next) => {
   }
   await next()
 })
-
-app.use(bodyParser())
+//* art-template
+render(app, {
+  root: viewsPath,
+  extname: '.ejs',
+  debug: process.env.NODE_ENV !== 'production'
+})
 
 //* static
 const staticPath = __dirname + '/static'

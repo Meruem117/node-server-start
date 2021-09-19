@@ -7,8 +7,10 @@
     "start": "node ./src/app.js"
   },
   "dependencies": {
+    "art-template": "^4.13.2",
     "ejs": "^3.1.6",
     "koa": "^2.13.1",
+    "koa-art-template": "^1.1.1",
     "koa-bodyparser": "^4.3.0",
     "koa-router": "^10.1.1",
     "koa-static": "^5.0.0",
