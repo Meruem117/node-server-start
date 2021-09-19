@@ -1,6 +1,7 @@
 const Koa = require('koa')
 const Router = require('koa-router')
 const views = require('koa-views')
+const bodyParser = require('koa-bodyparser')
 
 const app = new Koa()
 const router = new Router()
@@ -18,6 +19,8 @@ app.use(async (ctx, next) => {
   await next()
 })
 
+app.use(bodyParser())
+
 //* middleware
 app.use(async (ctx, next) => {
   console.log('p1')
@@ -25,6 +28,7 @@ app.use(async (ctx, next) => {
   console.log('p2')
 })
 
+//* router
 router.get('/', async (ctx) => {
   ctx.body = "Home Page"
 })
@@ -39,7 +43,17 @@ router.get('/get', async (ctx) => {
   console.log(ctx.query)
   console.log(ctx.querystring)
   console.log(ctx.request.url)
-  ctx.body = 'get value'
+  ctx.body = 'Get'
+})
+
+router.post('/post', async (ctx) => {
+  const data = ctx.request.body
+  console.log(data)
+  ctx.body = 'Post'
+})
+
+router.get('/form', async (ctx) => {
+  await ctx.render('form')
 })
 
 router.get('/about', async (ctx) => {
@@ -55,6 +69,7 @@ app
   .use(router.routes())
   .use(router.allowedMethods())
 
+//* 404
 app.use(async (ctx, next) => {
   console.log(new Date().toLocaleString())
   await next()
