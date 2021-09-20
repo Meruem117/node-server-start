@@ -4,9 +4,29 @@ const Router = require('koa-router')
 const bodyParser = require('koa-bodyparser')
 const static = require('koa-static')
 const render = require('koa-art-template')
+const session = require('koa-session')
 
 const app = new Koa()
 const router = new Router()
+
+//* session settings
+app.keys = ['my secret key']
+const config = {
+  key: 'koa.sess', /** (string) cookie key (default is koa.sess) */
+  /** (number || 'session') maxAge in ms (default is 1 days) */
+  /** 'session' will result in a cookie that expires when session/browser is closed */
+  /** Warning: If a session cookie is stolen, this cookie will never expire */
+  maxAge: 86400000,
+  autoCommit: true, /** (boolean) automatically commit headers (default true) */
+  overwrite: true, /** (boolean) can overwrite or not (default true) */
+  httpOnly: true, /** (boolean) httpOnly or not (default true) */
+  signed: true, /** (boolean) signed or not (default true) */
+  rolling: false, /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. (default is false) */
+  renew: false, /** (boolean) renew session when session is nearly expired, so we can always keep user logged in. (default is false)*/
+  secure: false, /** (boolean) secure cookie*/
+  sameSite: null, /** (string) session cookie sameSite options (default null, don't set it) */
+}
+app.use(session(config, app))
 
 app.use(bodyParser())
 
@@ -43,8 +63,18 @@ app.use(async (ctx, next) => {
 
 //* router
 router.get('/', async (ctx) => {
+  ctx.cookies.set('age', 18, {
+    maxAge: 10 * 1000,
+    path: '/cookie'
+  })
+  ctx.session.gender = 'male'
   ctx.body = "Home Page"
 })
+
+//* cookie
+router.get('/cookie', async (ctx) => ctx.body = ctx.cookies.get('age'))
+//* session
+router.get('/session', async (ctx) => ctx.body = ctx.session.gender)
 
 router.get('/user/:id', async (ctx) => {
   console.log(ctx.params)
